@@ -1,0 +1,9 @@
+netlify.toml
+[build]
+  functions = "netlify/functions"
+  publish = "."
+
+[[redirects]]
+  from = "/api/simplify"
+  to = "/.netlify/functions/simplify"
+  status = 200
