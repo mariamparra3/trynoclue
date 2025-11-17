@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Simplifier</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>AI Text Simplifier</h1>
+
+        <textarea id="inputText" placeholder="Paste your text here..."></textarea>
+
+        <button id="simplifyBtn">Simplify Text</button>
+
+        <div id="output" class="hidden"></div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+body {
+    margin: 0;
+    padding: 0;
+    background: #121212;
+    font-family: Arial, sans-serif;
+    color: white;
+}
+
+.container {
+    max-width: 600px;
+    margin: 40px auto;
+    background: #1e1e1e;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+textarea {
+    width: 100%;
+    height: 150px;
+    padding: 10px;
+    border-radius: 8px;
+    border: none;
+    font-size: 16px;
+    outline: none;
+}
+
+button {
+    width: 100%;
+    margin-top: 15px;
+    padding: 12px;
+    background: #00c896;
+    border: none;
+    border-radius: 8px;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #00b084;
+}
+
+#output {
+    margin-top: 20px;
+    padding: 15px;
+    border-radius: 8px;
+    background: #252525;
+    border: 1px solid #333;
+}
+
+.hidden {
+    display: none;
+}
+document.getElementById("simplifyBtn").addEventListener("click", async () => {
+    const text = document.getElementById("inputText").value.trim();
+    const output = document.getElementById("output");
+
+    if (!text) {
+        output.innerHTML = "Please enter text first.";
+        output.classList.remove("hidden");
+        return;
+    }
+
+    output.innerHTML = "Simplifying... please wait.";
+    output.classList.remove("hidden");
+
+    try {
+        const response = await fetch("/api/simplify", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ text })
+        });
+
+        const data = await response.json();
+        output.innerHTML = data.message || "Done.";
+    } catch (err) {
+        output.innerHTML = "Error: Unable to contact server.";
+    }
+});
+
