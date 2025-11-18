@@ -19,8 +19,9 @@ document.getElementById("simplifyBtn").addEventListener("click", async () => {
     });
 
     const data = await response.json();
+    console.log("Function returned:", data);
 
-    output.innerHTML = data.simplified || "No result returned.";
+    output.innerHTML = data.simplified || "No simplified text returned.";
   } catch (err) {
     output.innerHTML = "Error: Unable to contact server.";
   }
