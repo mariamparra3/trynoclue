@@ -12,7 +12,7 @@ document.getElementById("simplifyBtn").addEventListener("click", async () => {
   output.classList.remove("hidden");
 
   try {
-    const response = await fetch("/.netlify/functions/simplify", {
+    const response = await fetch("/netlify/functions/simplify", {
   method: "POST",
   headers: { "Content-Type": "application/json" },
   body: JSON.stringify({ text })
