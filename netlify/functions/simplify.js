@@ -6,13 +6,13 @@ const client = new OpenAI({
 
 export default async function handler(event, context) {
   try {
-    const body = JSON.parse(event.body);
+    const body = JSON.parse(event.body || "{}");
     const text = body.text;
 
     if (!text) {
       return {
         statusCode: 400,
-        body: JSON.stringify({ message: "No text provided." })
+        body: JSON.stringify({ error: "No text provided." })
       };
     }
 
@@ -24,19 +24,19 @@ export default async function handler(event, context) {
       ]
     });
 
+    const simplified = response.choices?.[0]?.message?.content || "";
+
     return {
       statusCode: 200,
-      body: JSON.stringify({
-        simplified: response.choices[0].message.content
-      })
+      body: JSON.stringify({ simplified })
     };
 
-  } catch (error) {
+  } catch (err) {
     return {
       statusCode: 500,
       body: JSON.stringify({
         error: "Server error",
-        details: error.message
+        details: err.message
       })
     };
   }
