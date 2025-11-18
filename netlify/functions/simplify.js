@@ -19,12 +19,12 @@ export default async function handler(event, context) {
     const response = await client.chat.completions.create({
       model: "gpt-4o-mini",
       messages: [
-        { role: "system", content: "Simplify the user's text." },
+        { role: "system", content: "Simplify the user's text into very clear, easy language." },
         { role: "user", content: text }
       ]
     });
 
-    const simplified = response.choices?.[0]?.message?.content || "";
+    const simplified = response.choices?.[0]?.message?.content || null;
 
     return {
       statusCode: 200,
