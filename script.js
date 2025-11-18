@@ -11,13 +11,16 @@ document.getElementById("simplifyBtn").addEventListener("click", async () => {
   output.innerHTML = "Simplifying... please wait.";
   output.classList.remove("hidden");
 
-  try const response = await fetch("/.netlify/functions/simplify", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ text })
-});
+  try {
+    const response = await fetch("/.netlify/functions/simplify", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ text })
+    });
+
     const data = await response.json();
-    output.innerHTML = data.message || "Done.";
+
+    output.innerHTML = data.simplified || "No result returned.";
   } catch (err) {
     output.innerHTML = "Error: Unable to contact server.";
   }
