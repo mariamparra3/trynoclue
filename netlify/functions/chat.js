@@ -1,35 +1,24 @@
-import OpenAI from "openai";
-
-const client = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY
-});
-
-export default async function handler(event, context) {
+exports.handler = async (event, context) => {
   try {
-    const body = JSON.parse(event.body || "{}");
-    const text = body.text;
+    const { prompt } = JSON.parse(event.body);
 
-    if (!text) {
-      return {
-        statusCode: 400,
-        body: JSON.stringify({ error: "No text provided." })
-      };
-    }
-
-    const response = await client.chat.completions.create({
-      model: "gpt-4o-mini",
-      messages: [
-        { role: "system", content: "Simplify the user's text." },
-        { role: "user", content: text }
-      ]
+    const response = await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${process.env.OPENAI_API_KEY}`
+      },
+      body: JSON.stringify({
+        model: "gpt-4o-mini",
+        messages: [{ role: "user", content: prompt }]
+      })
     });
 
-    const simplified =
-      response.choices?.[0]?.message?.content || "No simplified text.";
+    const data = await response.json();
 
     return {
       statusCode: 200,
-      body: JSON.stringify({ simplified })
+      body: JSON.stringify({ reply: data.choices[0].message.content })
     };
 
   } catch (err) {
@@ -41,4 +30,4 @@ export default async function handler(event, context) {
       })
     };
   }
-}
+};
